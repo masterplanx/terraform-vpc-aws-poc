@@ -3,7 +3,7 @@ resource "aws_instance" "public-instance" {
   instance_type = "t2.micro"
 
   # the VPC subnet
-  subnet_id = "${module.vpc.public_subnets}"
+  subnet_id = "${element(module.vpc.public_subnets, 0)}"
 
   # the security group
   vpc_security_group_ids = ["${aws_security_group.ssh-public.id}"]
@@ -17,7 +17,7 @@ resource "aws_instance" "private-instance" {
   instance_type = "t2.micro"
 
   # the VPC subnet
-  subnet_id = "${module.vpc.private_subnets}"
+  subnet_id = "${element(module.vpc.private_subnets, 0)}"
 
   # the security group
   vpc_security_group_ids = ["${aws_security_group.ssh-private.id}"]
