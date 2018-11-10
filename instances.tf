@@ -10,6 +10,11 @@ resource "aws_instance" "public-instance" {
 
   # the public SSH key
   key_name = "${aws_key_pair.sergiokeypair.key_name}"
+
+  tags {
+    Name = "public-instance-test"
+  }
+
 }
 
 resource "aws_instance" "private-instance" {
@@ -24,4 +29,9 @@ resource "aws_instance" "private-instance" {
 
   # the public SSH key
   key_name = "${aws_key_pair.sergiokeypair.key_name}"
+
+  tags {
+    Name = "private-instance-test"
+  }
+
 }
