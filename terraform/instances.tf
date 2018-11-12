@@ -15,6 +15,29 @@ resource "aws_instance" "public-instance" {
     Name = "public-instance-test"
   }
 
+
+  provisioner "remote-exec" {
+    inline = [
+      "# Connected!",  "sudo apt-get -qq install python -y",
+    ]
+    connection {
+		 host        = "${self.public_ip}"
+		 type	     = "ssh"
+   		 user        = "ubuntu"	      
+	 	 private_key = "${file(var.PATH_TO_PRIVATE_KEY)}"
+  	       }
+  }
+
+  provisioner "local-exec" {
+    environment {
+        PUBLIC_IP  = "${self.public_ip}"
+        PRIVATE_IP = "${self.private_ip}"
+    }
+
+    working_dir = "../ansible/create_users/"
+    command     = "ansible-playbook --private-key ../${var.PATH_TO_PRIVATE_KEY} playbook.yml -i ${self.public_ip},"   
+ 
+  }
 }
 
 resource "aws_instance" "private-instance" {

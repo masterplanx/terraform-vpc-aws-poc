@@ -1,0 +1,8 @@
+---
+users:
+  - username: sferreyra
+    fullname: Sergio Ferreyra
+    use_sudo: yes
+
+group: allowed_users
+shell: /bin/bash
