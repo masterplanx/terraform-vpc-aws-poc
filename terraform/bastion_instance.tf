@@ -1,4 +1,4 @@
-resource "aws_instance" "public-instance" {
+resource "aws_instance" "bastion_instance_flugel_poc" {
   ami           = "${lookup(var.AMIS, var.AWS_REGION)}"
   instance_type = "t2.micro"
 
@@ -12,7 +12,7 @@ resource "aws_instance" "public-instance" {
   key_name = "${aws_key_pair.sergiokeypair.key_name}"
 
   tags {
-    Name = "public-instance-test"
+    Name = "bastion_flugel_instance_poc"
   }
 
 
@@ -38,23 +38,4 @@ resource "aws_instance" "public-instance" {
     command     = "ansible-playbook --private-key ../${var.PATH_TO_PRIVATE_KEY} playbook.yml -i ${self.public_ip},"   
  
   }
-}
-
-resource "aws_instance" "private-instance" {
-  ami           = "${lookup(var.AMIS, var.AWS_REGION)}"
-  instance_type = "t2.micro"
-
-  # the VPC subnet
-  subnet_id = "${element(module.vpc.private_subnets, 0)}"
-
-  # the security group
-  vpc_security_group_ids = ["${aws_security_group.ssh-private.id}"]
-
-  # the public SSH key
-  key_name = "${aws_key_pair.sergiokeypair.key_name}"
-
-  tags {
-    Name = "private-instance-test"
-  }
-
 }

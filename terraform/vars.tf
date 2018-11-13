@@ -15,3 +15,5 @@ variable "AMIS" {
     us-west-1 = "ami-01a4d1b7f90b50bba"
   }
 }
+variable "image_owner" {}
+variable "instance_count" {}
