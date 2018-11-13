@@ -19,12 +19,17 @@
             },
     "instance_type": "t2.micro",
     "ssh_username": "ubuntu",
-    "ami_name": "flugel_instance_poc-{{timestamp}}"
+    "ami_name": "flugel_bastion_instance_poc-{{timestamp}}"
   }],
-  "provisioners": [{
+  "provisioners": [
+    {
     "type": "shell",
-    "scripts": [  "scripts/install-software.sh"   ],
-    "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-    "pause_before": "10s"
-  }]
+    "scripts": [  "scripts/install-software.sh"   ]
+     },
+     {
+     "type": "ansible",
+     "playbook_file": "../../ansible/create_users/playbook.yml",
+     "ansible_env_vars": [ "ANSIBLE_HOST_KEY_CHECKING=False", "ANSIBLE_REMOTE_TEMP=/tmp/.ansible" ]
+     }
+  ]
 }

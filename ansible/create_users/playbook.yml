@@ -36,7 +36,7 @@
 
   - name: add AllowUsers
     become: yes
-    lineinfile: dest=/etc/ssh/sshd_config line="AllowGroups {{ group }}, ubuntu"
+    lineinfile: dest=/etc/ssh/sshd_config line="AllowGroups {{ group }}"
  
   - name: Disallow root to login
     become: yes
