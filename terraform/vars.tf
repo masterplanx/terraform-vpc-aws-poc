@@ -2,10 +2,10 @@ variable "AWS_REGION" {
   default = "us-east-2"
 }
 variable "PATH_TO_PRIVATE_KEY" {
-  default = "sergiokey"
+  default = "../sergiokey"
 }
 variable "PATH_TO_PUBLIC_KEY" {
-  default = "sergiokey.pub"
+  default = "../sergiokey.pub"
 }
 variable "AMIS" {
   type = "map"
@@ -15,3 +15,5 @@ variable "AMIS" {
     us-west-1 = "ami-01a4d1b7f90b50bba"
   }
 }
+variable "image_owner" {}
+variable "instance_count" {}
