@@ -3,3 +3,44 @@
   become: true
   remote_user: ubuntu
   gather_facts: False
+
+  tasks:
+  - include_vars: users.yml
+
+  - name: Add group
+    become: yes
+    group: name={{ group }} state=present
+
+  - name: Add users | create users, shell, home dirs
+    user: name={{ item.username }} createhome=yes comment='{{ item.fullname }}' groups={{ group }} shell={{ shell }}
+    become: yes
+    with_items: '{{users}}'
+
+  - name: Setup | authorized key upload
+    become: yes
+    authorized_key: user={{ item.username }}
+      key="{{ lookup('file', 'pub_keys/{{ item.username }}.pub') }}"
+#      path='/home/{{ item.username }}/.ssh/authorized_keys'
+#      manage_dir=no
+    with_items: '{{users}}'
+
+  - name: Sudoers | update sudoers file and validate
+    become: yes
+    lineinfile: "dest=/etc/sudoers
+      insertafter=EOF
+      line='{{ item.username }} ALL=(ALL) NOPASSWD: ALL'
+      regexp='^{{ item.username }} .*'
+      state=present"
+    when: '{{ item.use_sudo }} == True'
+    with_items: '{{users}}'
+
+  - name: add AllowUsers
+    become: yes
+    lineinfile: dest=/etc/ssh/sshd_config line="AllowGroups {{ group }}"
+
+  - name: Disallow root to login
+    become: yes
+    lineinfile: dest=/etc/ssh/sshd_config regexp='^PermitRootLogin' line='PermitRootLogin no'
+
+  - name: Restart sshd
+    service: name=sshd state=restarted
